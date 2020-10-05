@@ -82,11 +82,9 @@ Quick Start
    - Sequence: ``/path_to_work_directory/genome.nextpolish.fasta``
    - Statistics: ``/path_to_work_directory/genome.nextpolish.fasta.stat``
 
-
-
 .. tip:: You can also use your own alignment pipeline, and then only use NextPolish to polish the genome, which will be faster than the default pipeline when runing on a local system. The accuracy of the polished genome is the same as the default. See following for an example (using bwa to do alignment).
       
-   .. code:: bash
+   .. code-block:: bash
 
       #Set input and parameters
       round=2
