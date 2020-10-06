@@ -34,7 +34,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - PacBio data
 
-    .. code:: shell
+    .. code-block:: shell
 
      minimap2 -x ava-pb pb.reads.fq pb.reads.fq | gzip -1 > overlaps.paf.gz
      miniasm -f pb.reads.fq overlaps.paf.gz > miniasm.gfa
@@ -42,7 +42,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - NanoPore data
 
-    .. code:: shell
+    .. code-block:: shell
 
      minimap2 -x ava-ont ont.reads.fq ont.reads.fq | gzip -1 > overlaps.paf.gz
      miniasm -f ont.reads.fq overlaps.paf.gz > miniasm.gfa
@@ -52,7 +52,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - fc_run.cfg
       
-    .. code:: console
+    .. code-block:: console
 
         job_type = sge
         input_fofn = input.fofn
@@ -87,7 +87,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - Run
       
-    .. code:: console
+    .. code-block:: console
       
       fc_run.py fc_run.cfg
 
@@ -97,7 +97,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - PacBio data
 
-    .. code:: shell
+    .. code-block:: shell
 
      genome=miniasm.fasta  
      reads=pb.reads.fq        
@@ -110,7 +110,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - NanoPore data
 
-    .. code:: shell
+    .. code-block:: shell
 
      genome=miniasm.fasta  
      reads=ont.reads.fq        
@@ -127,7 +127,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     -  work.sh
        
-    .. code:: shell
+    .. code-block:: shell
 
       genome=miniasm.racon.v4.fasta
       reads1=NGS_1.fq    
@@ -145,7 +145,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     -  work.sh
 
-    .. code:: shell
+    .. code-block:: shell
 
         genome=p_ctg.fa 
         reads1=NGS_1.fq    
@@ -163,13 +163,13 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   -  Run
      
-    .. code:: console
+    .. code-block:: console
 
       nohup sh work.sh > pilon.log &
 
   -  CPU time used for polishing
     
-    .. code:: shell
+    .. code-block:: shell
 
       egrep 'user|sys' pilon.log|awk '{x+=$2}END{print x}'
 
@@ -177,7 +177,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   -  run.cfg
       
-  .. code:: console
+  .. code-block:: console
     
     [General]
     job_type = local
@@ -198,20 +198,20 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   - Run  
 
-  .. code:: console
+  .. code-block:: console
 
     ls NGS_1.fq NGS_2.fq > sgs.fofn
     nextPolish run.cfg
 
   - CPU time used for polishing  
   
-  .. code:: shell
+  .. code-block:: shell
 
     egrep 'user|sys' 01_rundir/ */0*.polish.ref.sh.work/polish_genome */nextPolish.sh.e|awk '{print $2}'|sed 's/m//' |sed 's/s//' |awk '{x+=$1* 60+$2}END{print x}'
 
 6. **Run Gmap**
   
-  .. code:: shell
+  .. code-block:: shell
 
     genome=miniasm.racon.v4.pilon.v4.fasta # p_ctg.pilon.v4.fasta
     gmap_build -d ./${genome}.gmap ${genome}     
@@ -219,7 +219,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
 7. **Run Freebayes**
   
-  .. code:: shell
+  .. code-block:: shell
 
     genome=miniasm.racon.v4.pilon.v4.fasta # p_ctg.pilon.v4.fasta     
     reads1=NGS_1.fq         
@@ -231,7 +231,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
 8. **Count mapped reads**
    
-  .. code:: python
+  .. code-block:: python
   
     #!/usr/bin/env python
 
@@ -253,7 +253,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
 9. **Count SNP/Indel**
   
-  .. code:: shell
+  .. code-block:: shell
 
     #!/bin/bash
 
@@ -269,7 +269,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
 10. **Count mapped genes** 
   
-  .. code:: python
+  .. code-block:: python
     
     #!/usr/bin/env python
 

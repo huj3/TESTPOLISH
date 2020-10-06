@@ -22,7 +22,7 @@ Installation
 
    click `here <https://github.com/Nextomics/NextPolish/releases/latest/download/NextPolish.tgz>`__ or use the following command:
    
-   .. code:: console
+   .. code-block:: console
 
       wget https://github.com/Nextomics/NextPolish/releases/latest/download/NextPolish.tgz
 
@@ -37,19 +37,19 @@ Installation
 
 -  **INSTALL**
    
-   .. code:: console
+   .. code-block:: console
       
       tar -vxzf NextPolish.tgz && cd NextPolish && make
 
 -  **UNINSTALL**
    
-   .. code:: console
+   .. code-block:: console
 
       cd NextPolish && make clean
 
 -  **TEST**
    
-   .. code:: console
+   .. code-block:: console
       
       nextPolish test_data/run.cfg
 
@@ -60,20 +60,20 @@ Quick Start
 
 #. Prepare sgs\_fofn
    
-   .. code:: console
+   .. code-block:: console
 
       ls reads1_R1.fq reads1_R2.fq reads2_R1.fq reads2_R2.fq > sgs.fofn
 
 #. Create run.cfg
    
-   .. code:: console
+   .. code-block:: console
 
       genome=input.genome.fa
       echo -e "task = best\ngenome = $genome\nsgs_fofn = sgs.fofn" > run.cfg
 
 #. Run
    
-   .. code:: console
+   .. code-block:: console
 
       nextPolish run.cfg
 

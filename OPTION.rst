@@ -10,13 +10,13 @@ Input
 
 - ``genome file``
   
-  .. code:: console
+  .. code-block:: console
     
     genome=/path/to/need_to_be_polished_assembly_file
 
 - ``read file list`` (one file one line, paired-end files should be interleaved)
   
-  .. code:: console
+  .. code-block:: console
     
     ls reads1_R1.fq reads1_R2.fq reads2_R1.fq.gz reads2_R2.fq.gz ... > sgs.fofn
 
@@ -24,7 +24,7 @@ Input
   
   A config file is a text file that contains a set of parameters (key=value pairs) to set runtime parameters for NextDenovo. The following is a typical config file, which is also located in ``doc/run.cfg``.
 
-  .. code:: shell
+  .. code-block:: shell
 
     [General]
     job_type = local

@@ -11,13 +11,13 @@ Polishing using short reads only
 
 #. Prepare sgs_fofn
 
-   .. code:: console
+   .. code-block:: console
 
       ls reads1_R1.fq reads1_R2.fq reads2_R1.fq reads2_R2.fq > sgs.fofn
 
 #. Create run.cfg
 
-   .. code:: shell
+   .. code-block:: shell
 
 	[General]
 	job_type = local
@@ -38,7 +38,7 @@ Polishing using short reads only
 
 #. Run
 
-   .. code:: console
+   .. code-block:: console
 
       nextPolish run.cfg
 
@@ -49,7 +49,7 @@ Polishing using short reads only
 
 .. tip:: User defined alignment pipeline, which will be faster than the default pipeline when runing on a local system. The accuracy of the polished genome is the same as the default.
 	
-	.. code:: shell
+	.. code-block:: shell
 
 	   #Set input and parameters
 	   round=2
@@ -88,13 +88,13 @@ Polishing using long reads only
 
 #. Prepare lgs_fofn
 
-   .. code:: console
+   .. code-block:: console
 
       ls reads1.fq reads2.fa.gz > lgs.fofn
 
 #. Create run.cfg
 
-   .. code:: shell
+   .. code-block:: shell
 
 	[General]
 	job_type = local
@@ -116,7 +116,7 @@ Polishing using long reads only
 
 #. Run
 
-   .. code:: console
+   .. code-block:: console
 
       nextPolish run.cfg
 
@@ -127,7 +127,7 @@ Polishing using long reads only
 
 .. tip:: User defined alignment pipeline, which will be faster than the default pipeline when runing on a local system. The accuracy of the polished genome is the same as the default.
 	
-	.. code:: shell
+	.. code-block:: shell
 
 		#Set input and parameters
 		round=2
@@ -151,19 +151,19 @@ Polishing using short reads and long reads
 
 #. Prepare sgs_fofn
 
-   .. code:: console
+   .. code-block:: console
 
       ls reads1_R1.fq reads1_R2.fq reads2_R1.fq reads2_R2.fq > sgs.fofn
 
 #. Prepare lgs_fofn
 
-   .. code:: console
+   .. code-block:: console
 
       ls reads1.fq reads2.fa.gz > lgs.fofn
 
 #. Create run.cfg
 
-   .. code:: shell
+   .. code-block:: shell
 
 	[General]
 	job_type = local
@@ -189,7 +189,7 @@ Polishing using short reads and long reads
 
 #. Run
 
-   .. code:: console
+   .. code-block:: console
 
       nextPolish run.cfg
 
