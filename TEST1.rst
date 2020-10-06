@@ -43,7 +43,7 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
   - work.sh
 
-  .. code:: bash
+  .. code:: shell
 
     genome=asm.contigs.fasta  
     reads1=NGS_1.fq    
@@ -73,7 +73,7 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
   - work.sh
 
-  .. code:: bash
+  .. code:: shell
 
     awk '{if (NR%4==1){print $0"1"}else{print $0}}' NGS_1.fq > NGS_1.rn.fq;  
     awk '{if (NR%4==1){print $0"1"}else{print $0}}' NGS_2.fq > NGS_2.rn.fq;  
@@ -132,7 +132,7 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
   - CPU time used for polishing  
 
-  .. code:: bash
+  .. code:: shell
     
     egrep 'user|sys' 01_rundir/*/0*.polish.ref.sh.work/polish_genome*/nextPolish.sh.e|awk '{print $2}'|sed 's/m/\t/' |sed 's/s//' |awk '{x+=$1*60+$2}END{print x}'
 

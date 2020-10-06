@@ -31,7 +31,7 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
 
 3. **Simulate NanoPore data**
 
-  .. code:: bash
+  .. code:: shell
 
     python NanoSim/src/simulator.py genome -rg chr01.fa -c NanoSim/pre-trained_models/human_NA12878_DNA_FAB49712_guppy/training -n 1631727 -b guppy
     cat simulated_aligned_reads.fasta simulated_unaligned_reads.fasta > ont.sumulated.reads.fa
@@ -40,7 +40,7 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
   
   - PacBio data
 
-  .. code:: bash
+  .. code:: shell
 
     minimap2 -t 30 -x ava-pb pb.sumulated.reads.fa pb.sumulated.reads.fa > pb.asm.paf 
     miniasm -f pb.sumulated.reads.fa pb.asm.paf > pb.asm.gfa 
@@ -48,7 +48,7 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
 
   - NanoPore data
   
-  .. code:: bash
+  .. code:: shell
 
     minimap2 -t 30 -x ava-ont ont.sumulated.reads.fa ont.sumulated.reads.fa > ont.asm.paf 
     miniasm -f ont.sumulated.reads.fa ont.asm.paf > ont.asm.gfa 
@@ -59,14 +59,14 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
 
   - PacBio data
 
-  .. code:: bash
+  .. code:: shell
 
     minimap2 -x map-pb -t 20 pb.asm.fa pb.sumulated.reads.fa > pb.map.paf
     racon -t 20 pb.sumulated.reads.fa pb.map.paf pb.asm.fa > pb.asm.racon1.fa
 
   - NanoPore data
 
-  .. code:: bash
+  .. code:: shell
 
     minimap2 -x map-ont -t 20 ont.asm.fa ont.sumulated.reads.fa > ont.map.paf 
     racon -t 20 ont.sumulated.reads.fa ont.map.paf ont.asm.fa > ont.asm.racon1.fa
@@ -75,7 +75,7 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
   
   - PacBio data
 
-  .. code:: bash
+  .. code:: shell
 
     minimap2 -ax map-pb -t 20 pb.asm.fa pb.sumulated.reads.fa|samtools sort - -m 2g --threads 20 -o pb.map.bam 
     samtools index pb.map.bam 
@@ -84,7 +84,7 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
 
   - NanoPore data
   
-  .. code:: bash
+  .. code:: shell
 
     minimap2 -ax map-ont -t 20 ont.asm.fa ont.sumulated.reads.fa|samtools sort - -m 2g --threads 20 -o ont.map.bam 
     samtools index ont.map.bam 

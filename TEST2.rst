@@ -34,7 +34,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - PacBio data
 
-    .. code:: bash
+    .. code:: shell
 
      minimap2 -x ava-pb pb.reads.fq pb.reads.fq | gzip -1 > overlaps.paf.gz
      miniasm -f pb.reads.fq overlaps.paf.gz > miniasm.gfa
@@ -42,7 +42,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - NanoPore data
 
-    .. code:: bash
+    .. code:: shell
 
      minimap2 -x ava-ont ont.reads.fq ont.reads.fq | gzip -1 > overlaps.paf.gz
      miniasm -f ont.reads.fq overlaps.paf.gz > miniasm.gfa
@@ -97,7 +97,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - PacBio data
 
-    .. code:: bash
+    .. code:: shell
 
      genome=miniasm.fasta  
      reads=pb.reads.fq        
@@ -110,7 +110,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - NanoPore data
 
-    .. code:: bash
+    .. code:: shell
 
      genome=miniasm.fasta  
      reads=ont.reads.fq        
@@ -127,7 +127,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     -  work.sh
        
-    .. code:: bash
+    .. code:: shell
 
       genome=miniasm.racon.v4.fasta
       reads1=NGS_1.fq    
@@ -145,7 +145,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     -  work.sh
 
-    .. code:: bash
+    .. code:: shell
 
         genome=p_ctg.fa 
         reads1=NGS_1.fq    
@@ -169,7 +169,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   -  CPU time used for polishing
     
-    .. code:: bash
+    .. code:: shell
 
       egrep 'user|sys' pilon.log|awk '{x+=$2}END{print x}'
 
@@ -205,13 +205,13 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   - CPU time used for polishing  
   
-  .. code:: bash
+  .. code:: shell
 
     egrep 'user|sys' 01_rundir/ */0*.polish.ref.sh.work/polish_genome */nextPolish.sh.e|awk '{print $2}'|sed 's/m//' |sed 's/s//' |awk '{x+=$1* 60+$2}END{print x}'
 
 6. **Run Gmap**
   
-  .. code:: bash
+  .. code:: shell
 
     genome=miniasm.racon.v4.pilon.v4.fasta # p_ctg.pilon.v4.fasta
     gmap_build -d ./${genome}.gmap ${genome}     
@@ -219,7 +219,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
 7. **Run Freebayes**
   
-  .. code:: bash
+  .. code:: shell
 
     genome=miniasm.racon.v4.pilon.v4.fasta # p_ctg.pilon.v4.fasta     
     reads1=NGS_1.fq         
@@ -253,7 +253,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
 9. **Count SNP/Indel**
   
-  .. code:: bash
+  .. code:: shell
 
     #!/bin/bash
 

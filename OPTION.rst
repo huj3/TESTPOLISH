@@ -24,7 +24,7 @@ Input
   
   A config file is a text file that contains a set of parameters (key=value pairs) to set runtime parameters for NextDenovo. The following is a typical config file, which is also located in ``doc/run.cfg``.
 
-  .. code:: bash
+  .. code:: shell
 
     [General]
     job_type = local
