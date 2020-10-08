@@ -146,4 +146,4 @@ Cite
 Star
 ~~~~
 
-You can track updates by tab the "Star" button on the upper-right corner at the `github page <https://github.com/Nextomics/NextPolish>`_.
+You can track updates by tab the ``Star`` button on the upper-right corner at the `github page <https://github.com/Nextomics/NextPolish>`_.
