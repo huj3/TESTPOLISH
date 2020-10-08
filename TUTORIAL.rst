@@ -11,7 +11,7 @@ Polishing using short reads only
 
 #. Prepare sgs_fofn
 
-   .. code-block:: console
+   .. code-block:: shell
 
       ls reads1_R1.fq reads1_R2.fq reads2_R1.fq reads2_R2.fq > sgs.fofn
 
