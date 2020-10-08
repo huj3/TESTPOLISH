@@ -52,7 +52,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - fc_run.cfg
       
-    .. code-block:: console
+    .. code-block:: shell
 
         job_type = sge
         input_fofn = input.fofn
@@ -87,7 +87,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
     - Run
       
-    .. code-block:: console
+    .. code-block:: shell
       
       fc_run.py fc_run.cfg
 
@@ -163,7 +163,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   -  Run
      
-    .. code-block:: console
+    .. code-block:: shell
 
       nohup sh work.sh > pilon.log &
 
@@ -177,7 +177,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   -  run.cfg
       
-  .. code-block:: console
+  .. code-block:: shell
     
     [General]
     job_type = local
@@ -198,7 +198,7 @@ Performance comparison between NextPolish and Pilon using actual biological data
 
   - Run  
 
-  .. code-block:: console
+  .. code-block:: shell
 
     ls NGS_1.fq NGS_2.fq > sgs.fofn
     nextPolish run.cfg

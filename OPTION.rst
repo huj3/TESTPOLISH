@@ -10,13 +10,13 @@ Input
 
 - ``genome file``
   
-  .. code-block:: console
+  .. code-block:: shell
     
     genome=/path/to/need_to_be_polished_assembly_file
 
 - ``read file list`` (one file one line, paired-end files should be interleaved)
   
-  .. code-block:: console
+  .. code-block:: shell
     
     ls reads1_R1.fq reads1_R2.fq reads2_R1.fq.gz reads2_R2.fq.gz ... > sgs.fofn
 

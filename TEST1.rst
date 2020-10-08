@@ -17,25 +17,25 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
 1. **Download reference**
    
-  .. code-block:: console
+  .. code-block:: shell
 
     curl -SL ftp://ftp.ensembl.org/pub/release-96/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz | gunzip - > chr01.fa
 
 2. **Simulate PacBio data**
 
-  .. code-block:: console
+  .. code-block:: shell
 
     pbsim --data-type CLR --model_qc /PBSIM-PacBio-Simulator/data/model_qc_clr --depth 50 --length-mean 10000 --accuracy-mean 0.85 --prefix pacbio chr01.fa
 
 3. **Simulate Illumina data**
 
-  .. code-block:: console
+  .. code-block:: shell
 
     art_illumina -ss HS25 -i chr01.fa -p -l 150 -f 50 -m 300 -s 10 -o NGS_
 
 4. **Assemble reference**
 
-  .. code-block:: console
+  .. code-block:: shell
 
     canu -pacbio-raw pacbio_0001.fastq -p asm -d canu-pb useGrid=True genomeSize=250m gridEngineMemoryOption="-l vf=MEMORY"
 
@@ -59,13 +59,13 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
   - Run
     
-  .. code-block:: console
+  .. code-block:: shell
 
     nohup sh work.sh > pilon.log &
 
   - CPU time used for polishing
   
-  .. code-block:: console
+  .. code-block:: shell
 
     egrep 'user|sys' pilon.log|awk '{x+=$2}END{print x}'
 
@@ -90,13 +90,13 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
   - Run
     
-  .. code-block:: console
+  .. code-block:: shell
 
     nohup sh work.sh > racon.log &
 
   - CPU time used for polishing
 
-  .. code-block:: console
+  .. code-block:: shell
 
     egrep 'user|sys' racon.log|awk '{x+=$2}END{print x}'
 
@@ -104,7 +104,7 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
    -  run.cfg
 
-  .. code-block:: console
+  .. code-block:: shell
 
     [General]
     job_type = local
@@ -125,7 +125,7 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
   - Run  
   
-  .. code-block:: console
+  .. code-block:: shell
 
    ls NGS_1.fq NGS_2.fq > sgs.fofn
    nextPolish run.cfg
@@ -158,7 +158,7 @@ Performance comparison between NextPolish, Pilon and Racon using simulated short
 
   -  Run
 
-  .. code-block:: console
+  .. code-block:: shell
 
     quast/quast-5.0.2/quast.py -e --min-contig 1000000 --min-alignment 50000 --extensive-mis-size 7000 -r chr01.fa asm.contigs.fasta asm.contigs.nextpolishv1.fasta asm.contigs.nextpolishv2.fasta asm.contigs.pilonv1.fasta asm.contigs.pilonv2.fasta asm.contigs.pilonv3.fasta asm.contigs.pilonv4.fasta asm.contigs.raconv1.fasta asm.contigs.raconv2.fasta asm.contigs.raconv3.fasta asm.contigs.raconv4.fasta
 

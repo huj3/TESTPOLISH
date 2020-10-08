@@ -19,13 +19,13 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
 
 1. **Download reference**
 
-  .. code-block:: console
+  .. code-block:: shell
 
     curl -SL ftp://ftp.ensembl.org/pub/release-96/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz | gunzip - > chr01.fa
 
 2. **Simulate PacBio data**
 
-  .. code-block:: console
+  .. code-block:: shell
 
     pbsim --data-type CLR --model_qc /PBSIM-PacBio-Simulator/data/model_qc_clr --depth 50 --length-mean 10000 --accuracy-mean 0.85 --prefix pacbio chr01.fa
 
@@ -111,7 +111,7 @@ Performance comparison between NextPolish and Racon using simulated long noisy r
 
   - Run
 
-  .. code-block:: console
+  .. code-block:: shell
 
     quast.py --eukaryote --large --threads 25 --min-identity 85 -r chr01.fa pb.asm.fa pb.asm.nextpolish1.fa pb.asm.racon1.fa ont.asm.fa  ont.asm.nextpolish1.fa ont.asm.racon1.fa
 

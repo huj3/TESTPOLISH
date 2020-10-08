@@ -38,7 +38,7 @@ Polishing using short reads only
 
 #. Run
 
-   .. code-block:: console
+   .. code-block:: shell
 
       nextPolish run.cfg
 
@@ -88,7 +88,7 @@ Polishing using long reads only
 
 #. Prepare lgs_fofn
 
-   .. code-block:: console
+   .. code-block:: shell
 
       ls reads1.fq reads2.fa.gz > lgs.fofn
 
@@ -116,7 +116,7 @@ Polishing using long reads only
 
 #. Run
 
-   .. code-block:: console
+   .. code-block:: shell
 
       nextPolish run.cfg
 
@@ -151,13 +151,13 @@ Polishing using short reads and long reads
 
 #. Prepare sgs_fofn
 
-   .. code-block:: console
+   .. code-block:: shell
 
       ls reads1_R1.fq reads1_R2.fq reads2_R1.fq reads2_R2.fq > sgs.fofn
 
 #. Prepare lgs_fofn
 
-   .. code-block:: console
+   .. code-block:: shell
 
       ls reads1.fq reads2.fa.gz > lgs.fofn
 
@@ -189,7 +189,7 @@ Polishing using short reads and long reads
 
 #. Run
 
-   .. code-block:: console
+   .. code-block:: shell
 
       nextPolish run.cfg
 
