@@ -4,8 +4,9 @@
   :hidden:
   
   Usuage <QSTART>
-  Tutorial <TUTORIAL>   
+  Tutorial <TEST1>   
   Parameter Reference <OPTION>     
+  Utilities <UTILITY>
   FAQ <FAQ>
 
 .. toctree::
@@ -13,8 +14,8 @@
   :maxdepth: 2
   :hidden:
 
-  Simulated short reads <TEST1> 
-  Simulated long noisy reads <TEST3>  
-  Actual biological data <TEST2>   
+  CHM13hTERT human cell line with 120x Oxford Nanopore data <TEST2>   
+  Arabidopsis thaliana with 192X PacBio CLR data (~1% heterozygosity) <TEST3>   
+  Drosophila melanogaster with 69X Oxford Nanopore data <TEST4>
 
 .. include:: QSTART.rst

@@ -6,46 +6,96 @@ Frequently Asked Questions
 .. contents::
   :local:
 
-What is the difference between `NextPolish <https://github.com/Nextomics/NextPolish>`__ and `Pilon <https://github.com/broadinstitute/pilon>`__?
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+.. _how-to-optimize-parallel-computing-parameters:
 
-Currently, NextPolish is focuses on genome correction using shotgun reads, which is also one of the most important steps (typically the last step) to accomplish a genome assembly, while Pilon can be used to make other improvements. For genome correction, NextPolish consumes considerable less time and has a higher correction accuracy for genomes with same sizes and such an advantage becomes more and more significant when the genome size of targeted assemblies increased compared to Pilon. See BENCHMARK section for more details.
+How to optimize parallel computing parameters?
+----------------------------------------------
+The main parallel computing parameters include ``parallel_jobs``, ``pa_correction``, ``-t`` in `minimap2_options_raw`, `minimap2_options_cns`, `minimap2_options_map` and ``-p`` in `correction_options`. Each ``parallel_jobs`` subjob requires 32~64 gb RAM depending on the read length, each ``pa_correction`` subjob requires ~TOTAL_INPUT_BASES/4 bytes RAM.  
 
-Which job scheduling systems are supported by NextPolish?
-------------------------------------------------------------
+1. For an assembly on a local computer with ``P`` cores and ``M`` gb memory. A typical configuration file can be set like this (not the best, but better than the default):
+	
+  .. code-block:: shell
 
-NextPolish use `DRMAA <https://en.wikipedia.org/wiki/DRMAA>`__ to submit, control, and monitor jobs, so in theory, support all DRMAA-compliant system, such as LOCAL, SGE, PBS, SLURM.
+    [General]
+    job_type = local 
+    parallel_jobs = M/64 #here, 64 can optimize to 32~64
+    ...
+
+    [correct_option]
+    pa_correction = M/(TOTAL_INPUT_BASES * 1.2/4)
+    sort_options = -m TOTAL_INPUT_BASES * 1.2/4g -t P/pa_correction
+    correction_options = -p P/pa_correction
+    minimap2_options_raw = -t P/parallel_jobs
+    ...
+
+    [assemble_option]
+    minimap2_options_cns = -t P/parallel_jobs 
+    ...
+
+2. For an assembly on a computer cluster with ``N`` computer nodes and each computer node has ``P`` cores and ``M`` gb memory. A typical configuration file can be set like this (not the best, but better than the default):
+
+  .. code-block:: shell
+
+  	let parallel_jobs_local = M/64 #here, 64 can optimize to 32~64
+  	let pa_correction_local = M/(TOTAL_INPUT_BASES * 1.2/4)
+
+  .. code-block:: shell
+
+    [General]
+    job_type = sge 
+    parallel_jobs = parallel_jobs_local * N 
+    ...
+
+    [correct_option]
+    pa_correction = pa_correction_local * N
+    sort_options = -m TOTAL_INPUT_BASES * 1.2/4g -t P/pa_correction_local
+    correction_options = -p P/pa_correction_local
+    minimap2_options_raw = -t P/parallel_jobs_local
+    ...
+
+    [assemble_option]
+    minimap2_options_cns = -t P/parallel_jobs_local 
+    ...
+
+What's the difference between ``nd.asm.p.fasta`` and the final assembly result ``nd.asm.fasta``?
+------------------------------------------------------------------------------------------------
+In theroy, ``nd.asm.p.fasta`` contains more structural & base errors than ``nd.asm.fasta``, you can chose ``nd.asm.p.fasta`` as the final assembly result, but validate the assembly quality first.
+
+How to adjust parameters if the assembly size is smaller than the expected genome size?
+-------------------------------------------------------------------------------------------
+For highly heterozygous genomes, try to set ``nextgraph_options = -a 1 -A``, otherwise you can set ``-q`` from 5 to 16 in ``nextgraph_options``, our tests show that setting ``nextgraph_options = -a 1 -q 10`` can usually get the best result.
+
+Which job scheduling systems are supported by NextDenovo?
+----------------------------------------------------------
+
+NextDenovo uses `DRMAA <https://en.wikipedia.org/wiki/DRMAA>`__ to submit, control, and monitor jobs, so theoretically it supports all DRMAA-compliant systems, such as LOCAL, SGE, PBS, SLURM. See `ParallelTask <https://github.com/moold/ParallelTask>`_ to configure drmaa.
 
 How to continue running unfinished tasks?
---------------------------------------------
+----------------------------------------------------------
 
 No need to make any changes, simply run the same command again.
 
-How to set the `task` parameter?
--------------------------------------
+How to reduce the total number of subtasks?
+----------------------------------------------------------
 
-The ``task`` parameter is used to set the polishing algorithm logic, 1, 2, 3, 4 are different algorithm modules for short reads, while 5 is the algorithm module for long reads. BTW, steps 3 and 4 are experimental, and we do not currently recommend running on a actual project. Set ``task=551212`` means NextPolish will cyclically run steps 5, 1 and 2 with 2 iterations.
+Please increase blocksize and reduce seed\_cutfiles.
 
-How many iterations to run NextPolish cyclically to get the best result?
----------------------------------------------------------------------------
+How to speed up NextDenovo?
+----------------------------------------------------------
 
-Our test shown that run NextPolish with 2 iterations, and most of the bases with effectively covered by SGS data can be corrected. Please set ``task=best`` to get the best result. ``task = best`` means NextPolish will cyclically run steps [5], 1 and 2 with 2 iterations. Of course, you can require NextPolish to run with more iterations to get a better result, such as set ``task=555512121212``, which means NextPolish will cyclically run steps 5, 1 and 2 with 4 iterations.
+Currently, the bottlenecks of NextDenovo are minimap2 and IO. For minimap2, please see `here <https://github.com/lh3/minimap2/issues/322>`__ to accelerate minimap2, besides, you can increase ``-l`` to reduce result size and disk consumption. For IO, you can check how many activated subtasks using top/htop, in theory, it should be equal to the ``-p`` parameter defined in correction\_options. Use usetempdir will reduce IO wait, especially if usetempdir is on a SSD driver.
 
-Why does the contig N50 of polished genome become shorter or why does the polished genome contains some extra ``N``?
---------------------------------------------------------------------------------------------------------------------------
+How to specify the queue/cpu/memory/bash to submit jobs?
+----------------------------------------------------------
 
-In some cases, if the short reads contain ``N``, some error bases will be fixed by ``N`` (the global score of a kmer with ``N`` is the largest and be selected), and remove ``N`` in short reads will avoid this.
+Please use cluster\_options, NextDenovo will replace ``{vf}``, ``{cpu}``, ``{bash}`` with specific values needed for each jobs.
 
-What is the difference between bwa or minimap2 to do SGS data mapping?
---------------------------------------------------------------------------
+RuntimeError: Could not find drmaa library. Please specify its full path using the environment variable DRMAA\_LIBRARY\_PATH.
+-------------------------------------------------------------------------------------------------------------------------------------------------
+   
+Please setup the environment variable: DRMAA\_LIBRARY\_PATH, see `here <https://github.com/pygridtools/drmaa-python>`__ for more details.
 
-Our test shown Minimap2 is about 3 times faster than bwa, but the accuracy of polished genomes using minimap2 or bwa is tricky, depending on the error rate of genomes and SGS data, see `here <https://lh3.github.io/2018/04/02/minimap2-and-the-future-of-bwa>`__ for more details.
+ERROR: drmaa.errors.DeniedByDrmException: code 17: error: no suitable queues.
+---------------------------------------------------------------------------------------
 
-How to specify the queue cpu/memory/bash to submit jobs?
-------------------------------------------------------------
-Please use cluster_options, NextPolish will replace ``{vf}``, ``{cpu}``, ``{bash}`` with specific values needed for each jobs.
-
-RuntimeError: Could not find drmaa library.  Please specify its full path using the environment variable DRMAA_LIBRARY_PATH.
----------------------------------------------------------------------------------------------------------------------------------
-
-Please setup the environment variable: DRMAA_LIBRARY_PATH, see `here <https://github.com/pygridtools/drmaa-python>`__ for more details.
+This is usually caused by a wrong setting of cluster\_options, please check cluster\_options first. If you use SGE, you also can add ``-w n`` to cluster\_options, it will switch off validation for invalid resource requests. Please add a similar option for other job scheduling systems.

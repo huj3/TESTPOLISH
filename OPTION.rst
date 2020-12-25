@@ -1,62 +1,57 @@
 .. _parameterreference:
 
-NextPolish Parameter Reference
+NextDenovo Parameter Reference
 ==============================
 
-NextPolish requires at least one assembly file (option: ``genome``) and one read file list (option: ``sgs_fofn`` or ``lgs_fofn``) as input, it works with gzip'd FASTA and FASTQ formats and uses a ``config file`` to pass options.
+NextDenovo requires at least one read file (option: ``input_fofn``) as input, it works with gzip'd FASTA and FASTQ formats and uses a ``config file`` to pass options.
 
 Input
 -----
 
-- ``genome file``
-  
-  .. code-block:: shell
-    
-    genome=/path/to/need_to_be_polished_assembly_file
+- ``input_fofn`` (one file one line)
 
-- ``read file list`` (one file one line, paired-end files should be interleaved)
-  
   .. code-block:: shell
-    
-    ls reads1_R1.fq reads1_R2.fq reads2_R1.fq.gz reads2_R2.fq.gz ... > sgs.fofn
 
+    ls reads1.fasta reads2.fastq reads3.fasta.gz reads4.fastq.gz ... > input.fofn
 - ``config file``
-  
-  A config file is a text file that contains a set of parameters (key=value pairs) to set runtime parameters for NextDenovo. The following is a typical config file, which is also located in ``doc/run.cfg``.
 
-  .. code-block:: shell
+  A config file is a text file that contains a set of parameters (key=value pairs) to set runtime parameters for NextDenovo. The following is a typical config file, which is also located in ``doc/run.cfg``.
+  
+  .. code-block:: bash
 
     [General]
     job_type = local
-    job_prefix = nextPolish
-    task = best
+    job_prefix = nextDenovo
+    task = all
     rewrite = yes
-    rerun = 3
-    parallel_jobs = 6
-    multithread_jobs = 5
-    genome = ./raw.genome.fasta
-    genome_size = auto
-    workdir = ./01_rundir
-    polish_options = -p {multithread_jobs}
+    deltmp = yes 
+    parallel_jobs = 20
+    input_type = raw
+    read_type = clr # clr, ont, hifi
+    input_fofn = input.fofn
+    workdir = 01_rundir
 
-    [sgs_option] #optional
-    sgs_fofn = ./sgs.fofn
-    sgs_options = -max_depth 100 -bwa
+    [correct_option]
+    read_cutoff = 1k
+    genome_size = 1g # estimated genome size
+    sort_options = -m 20g -t 15
+    minimap2_options_raw = -t 8
+    pa_correction = 3
+    correction_options = -p 15
 
-    [lgs_option] #optional
-    lgs_fofn = ./lgs.fofn
-    lgs_options = -min_read_len 1k -max_depth 100
-    lgs_minimap2_options = -x map-ont
+    [assemble_option]
+    minimap2_options_cns = -t 8 
+    nextgraph_options = -a 1  
 
 Output
 ------
 
-- ``genome.nextpolish.fasta`` 
-  
-  Polished genome with fasta format, the fasta header includes primary seqID, length.
-- ``genome.nextpolish.fasta.stat``
+- ``workdir/03.ctg_graph/nd.asm.fasta``
 
-  Some basic statistical information of the polished genome. 
+  Contigs with fasta format, the fasta header includes ID, type, length, node count, a consecutive lowercase region in the sequence implies a weak connection, and a low quality base is marked with a single lowercase base.
+- ``workdir/03.ctg_graph/nd.asm.fasta.stat``
+
+  Some basic statistical information (N10-N90, Total size et al.).
 
 .. _options:
 
@@ -67,75 +62,105 @@ Global options
 ##############
 
   .. option:: job_type = sge           
+    
+    local, sge, pbs, lsf, slurm... (default: sge)
 
-    local, sge, pbs... (default: sge)
-  .. option:: job_prefix = nextPolish  
+  .. option:: job_prefix = nextDenovo  
 
-    prefix tag for jobs. (default: nextPolish)
-  .. option:: task = best              
+    prefix tag for jobs. (default: nextDenovo)
+  .. option:: task = <all, correct, assemble>     
 
-    task need to run [all, default, best, 1, 2, 5, 12, 1212...], 1, 2 are different algorithm modules for short reads, while 5 is the algorithm module for long reads, all=[5]1234, default=[5]12, best=[55]1212. (default: best)
-  .. option:: rewrite = no             
+    task need to run, correct = only do the correction step, assemble = only do the assembly step (only work if ``input_type`` = corrected or ``read_type`` = hifi), all = correct + assemble. (default: all)
+  .. option::  rewrite = no  
 
     overwrite existed directory [yes, no]. (default: no)
-  .. option:: rerun = 3                
+  .. option::  deltmp = yes      
 
-    re-run unfinished jobs untill finished or reached ${rerun} loops, 0=no. (default: 3)
-  .. option:: parallel_jobs = 6        
+    delete intermediate results. (default: yes)
+  .. option::  rerun = 3         
 
-    number of tasks used to run in parallel. (default: 6)
-  .. option:: multithread_jobs = 5     
+    re-run unfinished jobs untill finished or reached ``rerun`` loops, 0=no. (default: 3)
+  .. option::  parallel_jobs = 10       
 
-    number of threads used to in a task. (default: 5)
-  .. option:: cluster_options = auto   
+    number of tasks used to run in parallel. (default: 10)
+  .. option::  input_type = raw         
 
-    a template to define the resource requirements for each job, which will pass to DRMAA as the nativeSpecification field.
-  .. option:: genome = genome.fa       
+    input reads type [raw, corrected]. (default: raw)
+  .. option::  input_fofn = input.fofn  
 
-    genome file need to be polished. (**required**)
-  .. option::genome_size = auto       
+    input file, one line one file. (**required**)
 
-    genome size, auto = calculate genome size using the input ${genome} file. (default: auto)
-  .. option:: workdir = 01_rundir      
+.. _read_type:
+
+  .. option::  read_type = {clr, hifi, ont}  
+
+    reads type, clr=PacBio continuous long read, hifi=PacBio highly accurate long reads, ont=NanoPore 1D reads. (**required**)
+  .. option::  workdir = 01.workdir     
 
     work directory. (default: ./)
-  .. option:: polish_options = -p {multithread_jobs}
+  .. option::  usetempdir = /tmp/test   
 
-    ::
-    
-      -p, number of processes used for polishing.
-      -debug, output details of polished bases to stderr, only useful in short read polishing. (default: False)
+    temporary directory in compute nodes to avoid high IO wait. (default: None)
+  .. option::  nodelist = avanode.list.fofn
 
-Options for short reads
-#######################
+    a list of hostnames of available nodes, one node one line, used with usetempdir for non-sge job_type.
+  .. option:: cluster_options = auto
 
-  .. option:: sgs_fofn = ./sgs.fofn    
+    a template to define the resource requirements for each job, which will pass to `DRMAA <https://github.com/pygridtools/drmaa-python/wiki/FAQ>`__ as the nativeSpecification field.
 
-    input short read files list, one file one line, paired-end files should be interleaved.
-  .. option:: sgs_options = -max_depth 100 -bwa
+Correction options
+##################
 
-    ::
+  .. option::  read_cutoff = 1k   
 
-      -N, don't discard a read/pair if the read contains N base.
-      -use_duplicate_reads, use duplicate pair-end reads in the analysis. (default: False)
-      -unpaired, unpaired input files. (default: False)
-      -max_depth, use up to ${max_depth} fold reads data to polish. (default: 100)
-      -bwa, use bwa to do mapping. (default: -bwa) 
-      -minimap2, use minimap2 to do mapping, which is much faster than bwa. 
+    filter reads with length < ``read_cutoff``. (default: 1k)
 
-Options for long reads
-#######################
+.. _genome_size:
 
-  .. option:: lgs_fofn = ./lgs.fofn    
+  .. option::  genome_size = 1g   
 
-    input long read files list, one file one line.             
-  .. option:: lgs_options = -min_read_len 1k -max_depth 100
+    estimated genome size, suffix K/M/G recognized, used to calculate ``seed_cutoff``/``seed_cutfiles``/``blocksize`` and average depth, it can be omitted when manually setting ``seed_cutoff``.
+  .. option::  seed_depth = 45   
 
-    ::
+    expected seed depth, used to calculate ``seed_cutoff``, co-use with ``genome_size``, you can try to set it 30-45 to get a better assembly result. (default: 45)
+  .. option::  seed_cutoff = 0   
 
-      -min_read_len, filter reads with length shorter than ${min_read_len}. (default: 1k)
-      -max_read_len, filter reads with length longer than $ {max_read_len}, ultra-long reads usually contain lots of errors, and the mapping step requires significantly more memory and time, 0=disable (default: 0)
-      -max_depth, use up to ${max_depth} fold reads data to polish, 0=disable. (default: 100)  
-  .. option:: lgs_minimap2_options = -x map-pb -t {multithread_jobs}
-      
-    minimap2 options, used to set PacBio/Nanopore read overlap. (**required**)
+    minimum seed length, <=0 means calculate it automatically using :ref:`bin/seq_stat <seq_stat>`.
+  .. option::  seed_cutfiles = 5    
+
+    split seed reads into ``seed_cutfiles`` subfiles. (default: ``pa_correction``)
+  .. option::  blocksize = 10g      
+
+    block size for parallel running, split non-seed reads into small files, the maximum size of each file is ``blocksize``. (default: 10g)
+  .. option::  pa_correction = 3        
+
+    number of corrected tasks used to run in parallel, each corrected task requires ~TOTAL_INPUT_BASES/4 bytes of memory usage, overwrite ``parallel_jobs`` only for this step. (default: 3)
+  .. option::  minimap2_options_raw = -t 10  
+
+    minimap2 options, used to find overlaps between raw reads, see :ref:`minimap2-nd <minimap2-nd>` for details.
+  .. option::  sort_options = -m 40g -t 10 
+
+    sort options, see :ref:`ovl_sort <ovl_sort>` for details.  
+  .. option::  correction_options = -p 10 
+
+    correction options, see following::
+
+      -p, --process, set the number of processes used for correcting. (default: 10)
+      -b, --blacklist, disable the filter step and increase more corrected data.
+      -s, --split, split the corrected seed with un-corrected regions. (default: False)
+      -fast, 0.5-1 times faster mode with a little lower accuracy. (default: False)
+      -dbuf, disable caching 2bit files and reduce ~TOTAL_INPUT_BASES/4 bytes of memory usage. (default:False)
+      -max_lq_length, maximum length of a continuous low quality region in a corrected seed, larger max_lq_length will produce more corrected data with lower accuracy. (default: auto [pb/1k, ont/10k])
+
+Assembly options
+##################
+
+  .. option::  minimap2_options_cns = -t 8 -k17 -w17 
+
+    minimap2 options, used to find overlaps between corrected reads.
+  .. option::  minimap2_options_map = -t 10
+
+    minimap2 options, used to map reads back to the assembly.
+  .. option::  nextgraph_options = -a 1
+
+    nextgraph options, see :ref:`nextgraph <nextgraph>` for details.  
